@@ -1,0 +1,1 @@
+Task completed: Routing restructure finished. Owner dashboard now accessible at /owner with authentication guard. All navigation and redirects updated.

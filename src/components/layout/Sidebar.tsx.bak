@@ -1,0 +1,63 @@
+import { Link } from "@tanstack/react-router";
+
+const navItems = [
+  { name: "Dashboard", href: "/owner", icon: "dashboard", active: true },
+  { name: "Branches", href: "/owner/branches", icon: "branches" },
+  { name: "Sales", href: "/owner/sales", icon: "sales" },
+  { name: "Targets", href: "/owner/targets", icon: "targets" },
+  { name: "Inventory", href: "/owner/inventory", icon: "inventory" },
+  { name: "Products", href: "/owner/products", icon: "products" },
+  { name: "Team", href: "/owner/team", icon: "team" },
+  { name: "Reports", href: "/owner/reports", icon: "reports" },
+  { name: "Audit Log", href: "/owner/audit-log", icon: "audit" },
+  { name: "Settings", href: "/owner/settings", icon: "settings" },
+];
+
+export default function Sidebar() {
+  return (
+    <aside className="w-64 bg-[#0F1B33] text-white flex flex-col h-screen">
+      <div className="flex items-center space-x-3 p-4">
+        {/* Logo: blue rounded-square with "S" */}
+        <div className="w-8 h-8 bg-[#2563EB] rounded flex items-center justify-center">
+          <span className="text-white font-[600] text-[12px]">S</span>
+        </div>
+        <span className="font-[600] text-[18px]">SalesFlow Pro</span>
+      </div>
+
+      <nav className="flex-1 mt-6 space-y-2">
+        {navItems.map((item) => (
+          <Link
+            key={item.name}
+            to={item.href}
+            className={`flex items-center space-x-3 px-4 py-2 rounded-lg ${
+              item.active
+                ? "bg-[#2563EB] text-white"
+                : "text-[#64748B] hover:bg-[#1E293B] hover:text-white"
+            }`}
+          >
+            {/* We'll need to map icon names to actual icons. For simplicity, we'll use a placeholder. */}
+            <div className="w-5 h-5 flex items-center justify-center bg-[#2563EB]/20 rounded-full">
+              {/* Placeholder icon: just a dot */}
+              <span className="w-2 h-2 bg-[#2563EB] rounded-full"></span>
+            </div>
+            <span className="text-[13px] font-[500]">{item.name}</span>
+          </Link>
+        ))}
+      </nav>
+
+      {/* Bottom pinned section */}
+      <div className="mt-auto flex items-center space-x-3 p-4 border-t border-[#1E293B]">
+        {/* Avatar photo - placeholder */}
+        <div className="w-10 h-10 bg-[#2563EB] rounded-full flex items-center justify-center">
+          <span className="text-white font-[600] text-[12px]">JD</span>
+        </div>
+        <div className="space-y-1">
+          <span className="font-[700] text-[14px] whitespace-nowrap">James Daniel</span>
+          <span className="inline-flex items-center space-x-1 text-[10px] font-[600] bg-[#2563EB]/20 text-[#2563EB] px-2 py-0.5 rounded">
+            OWNER
+          </span>
+        </div>
+      </div>
+    </aside>
+  );
+}

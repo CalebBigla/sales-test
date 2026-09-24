@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd C:\\\\Users\\\\HP ELITEBOOK 840-G3\\\\OneDrive\\\\Desktop\\\\start\\\\salesflow-pro-foundation-main\\\\salesflow-pro-foundation-main)",
+      "Bash(vite build *)",
+      "Bash(npx vite *)",
+      "Bash(grep *)",
+      "Bash(npm run *)"
+    ]
+  }
+}

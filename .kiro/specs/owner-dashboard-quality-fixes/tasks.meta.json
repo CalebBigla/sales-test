@@ -1,0 +1,182 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Write bug condition exploration tests": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091423795
+      },
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091442048
+      },
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091862102
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fixes)": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091424562
+      },
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091869460
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133525765
+      }
+    ],
+    "3.1 Fix status badge Tailwind className issues": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091424915
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133539639
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133803850
+      }
+    ],
+    "3.2 Create useDashboardMetrics hook for computed data": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091425396
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133540423
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133807087
+      }
+    ],
+    "3.3 Add font size flexibility to StatCard component": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091425858
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133541589
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133808768
+      }
+    ],
+    "3.4 Replace hardcoded branch color logic with branch.color property": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091426234
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133542504
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133809479
+      }
+    ],
+    "3.5 Update dashboard.tsx to use computed data": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091426979
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133543523
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133810280
+      }
+    ],
+    "3.6 Verify bug condition exploration tests now pass": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091427356
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133818287
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133879030
+      }
+    ],
+    "3.7 Verify preservation tests still pass": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091427651
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133819488
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133879643
+      }
+    ],
+    "4. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "32042d63-fdd0-482f-a1c9-98be41ccb08f",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790091427889
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133881210
+      },
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133897859
+      }
+    ],
+    "3. Implement fixes for owner dashboard quality issues": [
+      {
+        "executionId": "7dc98868-1094-4bbf-b9f3-c3d72e3fa1b9",
+        "chatSessionId": "sess_6ea893db-6cd7-40ef-8be3-5a8eccb1f3a8",
+        "timestamp": 1790133880097
+      }
+    ]
+  }
+}

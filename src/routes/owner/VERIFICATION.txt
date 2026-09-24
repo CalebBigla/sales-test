@@ -1,0 +1,8 @@
+Routing restructure completed:
+- src/routes/owner/dashboard.tsx route path changed from "/owner/dashboard" to "/owner"
+- Authentication beforeLoad guard added to /owner route
+- All imports fixed (missing quotes and semicolons)
+- Redirects in src/routes/index.tsx and src/routes/login.tsx point to "/owner"
+- Sidebar links point to "/owner"
+- Removed _authenticated/owner route (already deleted)
+- Route tree will regenerate on next dev server start

@@ -1,0 +1,268 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import Sidebar from "@/components/layout/Sidebar";
+import Header from "@/components/layout/Header";
+import StatCard from "@/components/dashboard/StatCard";
+import BranchCard from "@/components/dashboard/BranchCard";
+import RevenueChart from "@/components/dashboard/RevenueChart";
+import ActivityItem from "@/components/dashboard/ActivityItem";
+import ApprovalButton from "@/components/dashboard/ApprovalButton";
+import { useDashboardData } from "@/hooks/useDashboardData";
+import { useBranches } from "@/hooks/useBranches";
+
+export const Route = createFileRoute("/owner/dashboard")({
+  component: OwnerDashboard,
+});
+
+function OwnerDashboard() {
+  const { data, loading, error } = useDashboardData();
+  const { branches, loading: branchesLoading, error: branchesError } = useBranches();
+
+  // If either hook is loading or error, we could show skeletons or error.
+  // For simplicity, we'll assume data is ready; but we should handle loading/error.
+  if (loading || branchesLoading) {
+    return (
+      <div className="min-h-screen bg-[#F1F5F9] flex">
+        <Sidebar />
+        <div className="flex-1 overflow-hidden">
+          <Header />
+          <main className="p-6">
+            {/* We'll show skeleton loaders for each section */}
+            <div className="space-y-6">
+              {/* Zone 1: Business Snapshot */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <StatCard skeleton />
+                <StatCard skeleton />
+              </div>
+              {/* Zone 2: Revenue This Month */}
+              <StatCard skeleton className="flex flex-col items-start" />
+              {/* Zone 3: Branch Performance */}
+              <div className="space-y-4">
+                <h2 className="text-[18px] font-[600] text-[#0F1B33] mb-2">
+                  Branch Performance
+                </h2>
+                <p className="text-[12px] font-[400] text-[#64748B]">Real-time Status</p>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <BranchCard skeleton />
+                  <BranchCard skeleton />
+                </div>
+              </div>
+              {/* Zone 4: Secondary Row */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <StatCard skeleton />
+                <StatCard skeleton />
+              </div>
+              {/* Zone 5: Approvals Row */}
+              <div className="grid gap-4 md:grid-cols-2">
+                <StatCard skeleton action={<ApprovalButton linkTo="/owner/target-change-requests" />} />
+                <StatCard skeleton dot="#B91C1C" />
+              </div>
+              {/* Zone 6: Revenue Performance Chart */}
+              <RevenueChart skeleton className="h-48" />
+              {/* Zone 7: Recent Activity */}
+              <div className="space-y-4">
+                <h2 className="text-[18px] font-[600] text-[#0F1B33] mb-2">
+                  Recent Activity
+                </h2>
+                <div className="flex justify-between items-center mb-2">
+                  <a href="/owner/audit-log" className="text-[12px] font-[600] text-[#2563EB] uppercase">
+                    VIEW ALL AUDIT LOG →
+                  </a>
+                </div>
+                <div className="space-y-2">
+                  <ActivityItem skeleton />
+                  <ActivityItem skeleton />
+                  <ActivityItem skeleton />
+                  <ActivityItem skeleton />
+                  <ActivityItem skeleton />
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || branchesError) {
+    return (
+      <div className="min-h-screen bg-[#F1F5F9] flex items-center justify-center">
+        <div className="bg-white rounded-lg border border-[#E5E9F0] shadow p-8 text-center max-w-md">
+          <h2 className="text-[24px] font-[700] text-[#0F1B33] mb-4">
+            Something went wrong
+          </h2>
+          <p className="text-[14px] font-[400] text-[#334155] mb-6">
+            We're having trouble loading your dashboard. Please try again later.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-[#2563EB] text-white rounded-lg font-[600] hover:bg-[#1d4ed8] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Now we have data and branches
+  return (
+    <div className="min-h-screen bg-[#F1F5F9] flex">
+      <Sidebar />
+      <div className="flex-1 overflow-hidden">
+        <Header />
+        <main className="p-6">
+          {/* Zone 1: Business Snapshot */}
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
+            <StatCard
+              label="TOTAL BRANCHES"
+              value={branches.length}
+              caption="Yaba, Ajah"
+              linkText="Manage branches →"
+              linkTo="/owner/branches"
+            />
+            <StatCard
+              label="TOTAL STAFF"
+              value={data.totalStaff}
+              caption="2 Managers · 2 Storekeepers · 9 Sales Reps"
+              linkText="Manage team →"
+              linkTo="/owner/team"
+            />
+          </div>
+
+          {/* Zone 2: Revenue This Month */}
+          <StatCard
+            label="REVENUE THIS MONTH"
+            value="₦3,050,000"
+            caption="80% of ₦3,800,000 target"
+            className="flex flex-col items-start"
+          >
+            <div className="mt-4 w-full">
+              <div className="w-full">
+                <div className="h-2.5 w-full bg-[#E5E9F0] rounded-full overflow-hidden">
+                  <div className="h-2.5 w-[80%] bg-[#2563EB] rounded-full"></div>
+                </div>
+              </div>
+              <div className="mt-2 text-[12px] font-[400] text-[#64748B] text-right">
+                ₦750,000 remaining
+              </div>
+            </div>
+          </StatCard>
+
+          {/* Zone 3: Branch Performance */}
+          <div className="space-y-4 mb-6">
+            <h2 className="text-[18px] font-[600] text-[#0F1B33] mb-2">
+              Branch Performance
+            </h2>
+            <p className="text-[12px] font-[400] text-[#64748B]">Real-time Status</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {branches.map((branch) => {
+                const percentage = Math.round((branch.revenue / branch.target) * 100);
+                let statusText = "";
+                let statusColor: "green" | "amber" | "red" = "green";
+                if (percentage >= 100) {
+                  statusText = `On Target (${percentage}%)`;
+                  statusColor = "green";
+                } else if (percentage >= 80) {
+                  statusText = `At Risk (${percentage}%)`;
+                  statusColor = "amber";
+                } else {
+                  statusText = `Behind (${percentage}%)`;
+                  statusColor = "red";
+                }
+                // We need revenue and target for each branch; we'll get from data?
+                // For simplicity, we'll use mock values; but we should have them in branch object.
+                // We'll assume branch object includes revenue and target.
+                // Since our useBranches doesn't provide revenue/target, we'll need to adjust.
+                // Let's modify useBranches to include revenue and target? Or we can compute from data.
+                // For now, we'll hardcode for demo.
+                const branchData = {
+                  yaba: { revenue: 1850000, target: 2000000, submissionsToday: 4, totalRepsToday: 5 },
+                 ajah: { revenue: 1200000, target: 1800000, submissionsToday: 2, totalRepsToday: 4 },
+                }[branch.name.toLowerCase()];
+                return (
+                  <BranchCard
+                    key={branch.id}
+                    branch={{
+                      ...branch,
+                      revenue: branchData.revenue,
+                      target: branchData.target,
+                      submissionsToday: branchData.submissionsToday,
+                      totalRepsToday: branchData.totalRepsToday,
+                    }}
+                    onClick={() => {
+                      // navigate to branch detail
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Zone 4: Secondary Row */}
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
+            <StatCard
+              label="INVENTORY HEALTH"
+              value="5 products need attention across 2 branches"
+              linkText="View inventory →"
+              linkTo="/owner/inventory"
+            />
+            <StatCard
+              label="DAILY SUBMISSIONS"
+              value="55% org-wide (6/11)"
+              caption="Pending: Blessing, Emeka, Ibrahim…"
+              linkText="View team →"
+              linkTo="/owner/team"
+            />
+          </div>
+
+          {/* Zone 5: Approvals Row */}
+          <div className="grid gap-4 md:grid-cols-2 mb-6">
+            <StatCard
+              label="TARGET CHANGE REQUESTS"
+              value="3 awaiting approval"
+              action={
+                <ApprovalButton linkTo="/owner/target-change-requests" />
+              }
+            />
+            <StatCard
+              label="STOCK ESCALATIONS"
+              value="2 pending >4hrs"
+              caption="HANDLED BY EACH BRANCH'S TEAM"
+              dot="#B91C1C"
+            />
+          </div>
+
+          {/* Zone 6: Revenue Performance Chart */}
+          <div className="mb-6">
+            <h2 className="text-[18px] font-[600] text-[#0F1B33] mb-2">
+              Revenue Performance
+            </h2>
+            <RevenueChart
+              branches={branches}
+              monthlyData={data.monthlyRevenue}
+              target={data.orgTarget}
+            />
+          </div>
+
+          {/* Zone 7: Recent Activity */}
+          <div className="space-y-4">
+            <h2 className="text-[18px] font-[600] text-[#0F1B33] mb-2">
+              Recent Activity
+            </h2>
+            <div className="flex justify-between items-center mb-2">
+              <a href="/owner/audit-log" className="text-[12px] font-[600] text-[#2563EB] uppercase">
+                VIEW ALL AUDIT LOG →
+              </a>
+            </div>
+            <div className="space-y-2">
+              {data.recentActivity.map((activity) => (
+                <ActivityItem key={activity.id} activity={activity} />
+              ))}
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}

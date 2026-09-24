@@ -1,0 +1,220 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration tests
+  - **Property 1: Bug Condition** - Quality Issues Surface on Unfixed Code
+  - **CRITICAL**: These tests MUST FAIL on unfixed code - failures confirm the bugs exist
+  - **DO NOT attempt to fix the tests or the code when they fail**
+  - **NOTE**: These tests encode the expected behavior - they will validate the fixes when they pass after implementation
+  - **GOAL**: Surface counterexamples that demonstrate each of the four bugs exists
+  - **Scoped Manual Testing Approach**: Run manual tests on UNFIXED code to observe and document failures
+  - Test Bug 1 - Status Badge Invisibility:
+    - Navigate to `/owner/dashboard` in the application
+    - Open Chrome DevTools and inspect a BranchCard status badge element
+    - Check computed styles for background-color and color properties
+    - Expected failure: Background and text colors will be transparent/default (missing CSS classes)
+    - Document: Screenshot or note which Tailwind classes are missing from compiled CSS
+  - Test Bug 2 - Hardcoded Data Display:
+    - Navigate to `/owner/dashboard`
+    - Observe displayed values for Total Staff, branch names caption, and revenue
+    - Query the database directly to get actual staff count and branch names
+    - Expected failure: Dashboard shows "Yaba, Ajah" and hardcoded staff count regardless of actual data
+    - Document: Note the hardcoded values that don't match database reality
+  - Test Bug 3 - Wrong Font Sizes:
+    - Navigate to `/owner/dashboard`
+    - Inspect Business Snapshot cards (Total Branches, Total Staff) in DevTools
+    - Measure the computed font-size on the metric value text
+    - Expected failure: Font size is 34px instead of the required 24px
+    - Document: Screenshot showing 34px computed font-size
+  - Test Bug 4 - Hardcoded Branch Color Logic:
+    - Examine `src/components/dashboard/BranchCard.tsx` line 89
+    - Verify code uses `branch.name.toLowerCase() === "yaba"` to determine color
+    - If possible, add a third branch named "Ikeja" in test database and observe it gets green color by default
+    - Expected failure: Color determination uses name check instead of `branch.color` property
+    - Document: Code snippet showing hardcoded name-based conditional
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: All tests FAIL (this is correct - it proves the bugs exist)
+  - Document all counterexamples found (specific failures, screenshots, observations)
+  - Mark task complete when tests are run, failures observed, and documented
+  - _Requirements: 1.13, 1.4, 1.9-1.11, 2.3, 3.9-3.11, 9.4-9.5, 9.8, 10.8, 11.8-11.10_
+
+- [x] 2. Write preservation property tests (BEFORE implementing fixes)
+  - **Property 2: Preservation** - Non-Buggy Dashboard Features Remain Unchanged
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for non-buggy dashboard features
+  - Write manual test cases capturing observed behavior patterns from Preservation Requirements
+  - Test Chart Rendering (Zone 6):
+    - Observe: Revenue Performance chart displays correctly with branch data
+    - Test: Chart renders with correct data, tooltips, legend, and interactions
+    - Verify: Chart behavior identical before and after fixes
+  - Test Activity Feed (Zone 7):
+    - Observe: Recent Activity displays activity items with timestamps and styling
+    - Test: Activity feed renders correctly with 0, 3, and 10+ entries
+    - Verify: Activity feed behavior identical before and after fixes
+  - Test Navigation:
+    - Observe: "View Detail →" links on BranchCards navigate correctly
+    - Observe: All StatCard links route to appropriate pages
+    - Test: All navigation actions work correctly
+    - Verify: Navigation behavior identical before and after fixes
+  - Test State Handling:
+    - Observe: Loading states show skeleton loaders
+    - Observe: Error states show retry buttons and error messages
+    - Observe: Empty states show appropriate empty state messages
+    - Test: All state transitions work correctly
+    - Verify: State handling identical before and after fixes
+  - Test Layout and Responsive Behavior:
+    - Observe: Dashboard layout with all 7 zones in correct order
+    - Observe: Responsive behavior at 768px and 1024px breakpoints
+    - Test: Layout maintains structure at different viewport sizes
+    - Verify: Layout behavior identical before and after fixes
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 1-13 (all non-bug-related requirements)_
+
+- [x] 3. Implement fixes for owner dashboard quality issues
+
+  - [x] 3.1 Fix status badge Tailwind className issues
+    - Update `src/components/dashboard/BranchCard.tsx`:
+      - Replace lines 91-98: Change dynamic template string className to conditional static classes
+      - Use pattern: `statusColor === "green" ? "bg-green-600/20 text-green-600" : statusColor === "amber" ? "bg-amber-600/20 text-amber-600" : "bg-red-600/20 text-red-600"`
+      - Remove template literal patterns like `bg-[${bgColor}]/20 text-[${statusColor}]`
+    - Update `src/components/dashboard/StatCard.tsx`:
+      - Replace lines 32-38: Apply same fix for status badges in StatCard component
+      - Use conditional static Tailwind classes instead of dynamic template strings
+    - Optional: Add safelist to `tailwind.config.ts` if using arbitrary values:
+      - Add safelist array with patterns: `bg-[#059669]/20`, `text-[#059669]`, `bg-[#B45309]/20`, `text-[#B45309]`, `bg-[#B91C1C]/20`, `text-[#B91C1C]`
+      - Alternative approach: Use Tailwind's built-in color classes (preferred)
+    - _Bug_Condition: isBugCondition(input) where input.componentName IN ['BranchCard', 'StatCard'] AND input.renderContext.usesTemplateStringsForTailwind === true_
+    - _Expected_Behavior: Status badges should have visible background colors (green/amber/red) with proper opacity and text colors_
+    - _Preservation: All other dashboard components, layout, and functionality remain unchanged_
+    - _Requirements: 3.9-3.11, 11.8-11.10_
+
+  - [x] 3.2 Create useDashboardMetrics hook for computed data
+    - Create new file `src/hooks/useDashboardMetrics.ts`
+    - Import `useBranches` hook to get branch data
+    - Import Supabase hooks for querying profiles table
+    - Implement metrics computation:
+      - Compute `totalRevenue` = SUM of all `branch.revenue` values
+      - Compute `totalTarget` = SUM of all `branch.target` values
+      - Compute `totalSalesCount` = SUM of all `branch.salesCount` values
+      - Compute `revenuePercentage` = (totalRevenue / totalTarget) * 100
+      - Query profiles table for staff counts by role (excluding Owner role)
+      - Compute `totalStaff` = count of Manager + Storekeeper + Sales_Rep profiles
+      - Compute `staffBreakdown` = `{ managers: X, storekeepers: Y, salesReps: Z }`
+    - Use `useMemo` for expensive computations to optimize performance
+    - Return object: `{ totalRevenue, totalTarget, revenuePercentage, totalStaff, staffBreakdown, loading, error }`
+    - Handle loading and error states properly
+    - _Bug_Condition: isBugCondition(input) where input.componentName === 'OwnerDashboard' AND input.renderContext.dataSource === 'hardcoded'_
+    - _Expected_Behavior: All dashboard metrics computed from database queries via hooks_
+    - _Preservation: Hook follows existing patterns in codebase, doesn't affect other hooks or components_
+    - _Requirements: 1.4, 1.9-1.11, 2.3, 9.4-9.5_
+
+  - [x] 3.3 Add font size flexibility to StatCard component
+    - Update `src/components/dashboard/StatCard.tsx`:
+      - Add to `StatCardProps` interface: `valueFontSize?: "small" | "large"`
+      - Update line 52: Replace `text-[34px]` with conditional className
+      - Use pattern: `${valueFontSize === "small" ? "text-2xl" : "text-[34px]"}` (text-2xl = 24px)
+      - Set default behavior: if prop not provided, use "large" (34px) for backward compatibility
+    - Ensure type safety with TypeScript interface
+    - _Bug_Condition: isBugCondition(input) where input.componentName === 'StatCard' AND input.renderContext.cardType === 'BusinessSnapshot' AND input.renderContext.fontSize === '34px'_
+    - _Expected_Behavior: Business Snapshot StatCards display metric values at 24px font size_
+    - _Preservation: Existing StatCards without the prop continue using 34px font size (default)_
+    - _Requirements: 1.13_
+
+  - [x] 3.4 Replace hardcoded branch color logic with branch.color property
+    - Update `src/components/dashboard/BranchCard.tsx`:
+      - Replace line 89: Change `const branchColor = branch.name.toLowerCase() === "yaba" ? "#2563EB" : "#059669";`
+      - To: `const branchColor = branch.color || "#2563EB";` (with fallback for defensive coding)
+      - Remove all name-based conditionals for determining branch color
+      - Use `branch.color` property directly from data object
+    - Verify branch data type includes `color` property
+    - _Bug_Condition: isBugCondition(input) where input.componentName === 'BranchCard' AND input.renderContext.colorDetermination === 'nameBasedConditional'_
+    - _Expected_Behavior: Branch color uses the branch.color property from data, supporting dynamic branches_
+    - _Preservation: Branch visual appearance remains consistent, just data source changes from hardcoded to property_
+    - _Requirements: 9.8, 10.8_
+
+  - [x] 3.5 Update dashboard.tsx to use computed data
+    - Update `src/routes/owner/dashboard.tsx`:
+      - Import `useDashboardMetrics` hook at top of file
+      - Add hook call: `const { totalRevenue, totalTarget, revenuePercentage, totalStaff, staffBreakdown, loading, error } = useDashboardMetrics();`
+      - Line 158: Keep `value={branches.length}` (already correct, uses branches data)
+      - Line 159: Replace `caption="Yaba, Ajah"` with `caption={branches.map(b => b.name).join(", ")}`
+      - Line 163: Replace hardcoded value with `value={totalStaff}`
+      - Line 164: Replace hardcoded caption with computed: ```caption={`${staffBreakdown.managers} Managers · ${staffBreakdown.storekeepers} Storekeepers · ${staffBreakdown.salesReps} Sales Reps`}```
+      - Line 170: Replace `value="₦3,050,000"` with `value={`₦${totalRevenue.toLocaleString()}`}`
+      - Line 171: Replace hardcoded caption with: ```caption={`${revenuePercentage.toFixed(0)}% of ₦${totalTarget.toLocaleString()} target`}```
+      - Line 158 and 163: Add `valueFontSize="small"` prop to both Business Snapshot StatCard components
+    - Handle loading state from hook appropriately
+    - Handle error state from hook appropriately
+    - _Bug_Condition: isBugCondition(input) where input.renderContext.dataSource === 'hardcoded' AND input.renderContext.shouldBeComputed === true_
+    - _Expected_Behavior: Dashboard displays real-time computed data from database instead of hardcoded values_
+    - _Preservation: Dashboard structure, layout, and component hierarchy remain unchanged_
+    - _Requirements: 1.4, 1.9-1.11, 1.13, 2.3, 9.4-9.5_
+
+  - [x] 3.6 Verify bug condition exploration tests now pass
+    - **Property 1: Expected Behavior** - Quality Issues Resolved on Fixed Code
+    - **IMPORTANT**: Re-run the SAME manual tests from task 1 - do NOT write new tests
+    - The tests from task 1 encode the expected behavior
+    - When these tests pass, it confirms the expected behavior is satisfied
+    - Re-run Bug 1 Test (Status Badge Visibility):
+      - Navigate to `/owner/dashboard` in the application
+      - Inspect BranchCard status badges in DevTools
+      - Verify background-color and text color are now applied correctly
+      - Test all three status states: "On Target" (green), "At Risk" (amber), "Behind" (red)
+      - Expected: Badges are visible with correct colors and opacity
+    - Re-run Bug 2 Test (Computed Data):
+      - Navigate to `/owner/dashboard`
+      - Verify Total Staff displays computed value from database
+      - Verify staff breakdown caption shows actual role counts
+      - Verify branch names caption displays all branches dynamically
+      - Verify revenue displays computed total from branch data
+      - Expected: All values reflect actual database state
+    - Re-run Bug 3 Test (Font Sizes):
+      - Inspect Business Snapshot cards in DevTools
+      - Measure computed font-size on metric values
+      - Expected: Font size is 24px for Total Branches and Total Staff
+    - Re-run Bug 4 Test (Branch Color Property):
+      - Verify code now uses `branch.color` property
+      - Test with different branch color values
+      - Expected: Each branch uses its assigned color from data
+    - **EXPECTED OUTCOME**: All tests PASS (confirms bugs are fixed)
+    - _Requirements: 1.13, 1.4, 1.9-1.11, 2.3, 3.9-3.11, 9.4-9.5, 9.8, 10.8, 11.8-11.10_
+
+  - [x] 3.7 Verify preservation tests still pass
+    - **Property 2: Preservation** - Non-Buggy Features Preserved After Fixes
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Re-run Chart Rendering Test:
+      - Verify Revenue Performance chart (Zone 6) still renders identically
+      - Test chart data, tooltips, legend, and interactions
+      - Expected: Chart behavior unchanged from baseline
+    - Re-run Activity Feed Test:
+      - Verify Recent Activity (Zone 7) still displays correctly
+      - Test with 0, 3, and 10+ activity entries
+      - Expected: Activity feed behavior unchanged from baseline
+    - Re-run Navigation Test:
+      - Test all links and navigation actions
+      - Verify "View Detail →" on BranchCards works
+      - Verify all StatCard links route correctly
+      - Expected: Navigation behavior unchanged from baseline
+    - Re-run State Handling Test:
+      - Test loading states show skeletons
+      - Test error states show retry buttons
+      - Test empty states show messages
+      - Expected: State handling unchanged from baseline
+    - Re-run Layout Test:
+      - Test responsive behavior at breakpoints
+      - Verify zone ordering unchanged
+      - Verify spacing and padding match original
+      - Expected: Layout behavior unchanged from baseline
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all tests still pass after fixes
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - Run the application locally and verify all manual tests pass
+  - Verify status badges are visible with correct colors
+  - Verify all dashboard data is computed from database (no hardcoded values)
+  - Verify Business Snapshot cards use 24px font size
+  - Verify branch colors use the branch.color property
+  - Verify all preservation tests still pass (no regressions in other features)
+  - If any issues found, investigate root cause and apply fixes
+  - Ask the user if questions arise or if additional verification is needed
