@@ -107,7 +107,7 @@ function LoginPage() {
       </div>
 
       <div className="flex w-full lg:w-1/2 items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center gap-3 mb-8">
             <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
               <svg
@@ -125,14 +125,14 @@ function LoginPage() {
             <span className="text-2xl font-bold text-slate-900">Friscontech</span>
           </div>
 
-          <div>
-            <h2 className="text-3xl font-bold text-slate-900">Welcome back</h2>
-            <p className="mt-2 text-sm text-slate-500">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-slate-900">Welcome back</h2>
+            <p className="mt-1 text-sm text-slate-500">
               Enter your credentials to access your workspace.
             </p>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-5">
+          <form onSubmit={onSubmit} className="space-y-4">
             {error && (
               <div className="rounded-lg border border-red-200 bg-red-50 p-3">
                 <p className="text-sm text-red-600">{error}</p>
@@ -142,7 +142,7 @@ function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-normal text-slate-900 mb-2"
+                className="block text-sm font-normal text-slate-900 mb-1.5"
               >
                 Email address
               </label>
@@ -153,14 +153,14 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="david.kim@orbitlabs.co"
-                className="w-full px-4 py-2.5 rounded-md border border-gray-200 bg-white text-sm text-slate-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-colors"
+                className="w-full px-3.5 py-2 rounded-md border border-gray-200 bg-white text-sm text-slate-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-colors"
               />
             </div>
 
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-normal text-slate-900 mb-2"
+                className="block text-sm font-normal text-slate-900 mb-1.5"
               >
                 Password
               </label>
@@ -172,7 +172,7 @@ function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full px-4 py-2.5 pr-10 rounded-md border border-gray-200 bg-white text-sm text-slate-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-colors"
+                  className="w-full px-3.5 py-2 pr-10 rounded-md border border-gray-200 bg-white text-sm text-slate-900 placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-colors"
                 />
                 <button
                   type="button"
@@ -188,7 +188,7 @@ function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between text-sm">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -196,12 +196,12 @@ function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-1 focus:ring-blue-500"
                 />
-                <span className="text-sm text-slate-600">Remember me</span>
+                <span className="text-slate-600">Remember me</span>
               </label>
 
               <Link
                 to="/forgot-password"
-                className="text-sm font-normal text-blue-600 hover:text-blue-700 transition-colors"
+                className="font-normal text-blue-600 hover:text-blue-700 transition-colors"
               >
                 Forgot password?
               </Link>
@@ -210,12 +210,12 @@ function LoginPage() {
             <button
               type="submit"
               disabled={busy}
-              className="w-full px-4 py-2.5 rounded-md bg-[#1e293b] text-white text-sm font-medium hover:bg-[#0f172a] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full px-4 py-2.5 rounded-md bg-[#1e293b] text-white text-sm font-medium hover:bg-[#0f172a] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors mt-2"
             >
               {busy ? "Signing in..." : "Sign In"}
             </button>
 
-            <div className="relative">
+            <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200" />
               </div>
@@ -240,7 +240,7 @@ function LoginPage() {
               </button>
             </div>
 
-            <div className="text-center text-sm text-slate-600">
+            <div className="text-center text-sm text-slate-600 pt-2">
               Don't have an account?{" "}
               <Link
                 to="/register"
